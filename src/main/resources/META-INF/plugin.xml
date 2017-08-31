@@ -93,6 +93,10 @@
 
         <runLineMarkerContributor language="Vclang" implementationClass="org.vclang.ide.typecheck.execution.lineMarker.TypeCheckRunLineMarkerContributor"/>
 
+        <!-- Completion -->
+
+        <completion.contributor language="Vclang" implementationClass="org.vclang.lang.core.completion.VcKeywordCompletionContributor"/>
+
         <!-- Color Settings -->
 
         <colorSettingsPage implementation="org.vclang.ide.colors.VcColorSettingsPage"/>
