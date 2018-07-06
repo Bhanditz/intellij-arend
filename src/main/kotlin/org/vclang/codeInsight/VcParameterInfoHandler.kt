@@ -22,6 +22,7 @@ import org.vclang.psi.VcTypeTele
 import org.vclang.psi.ext.PsiLocatedReferable
 import org.vclang.psi.ext.VcSourceNode
 import org.vclang.typing.parseBinOp
+import java.math.BigInteger
 
 class VcParameterInfoHandler: ParameterInfoHandler<Abstract.Reference, List<Abstract.Parameter>> {
     // private var lastAppExpr: VcArgumentAppExpr? = null
@@ -203,6 +204,9 @@ class VcParameterInfoHandler: ParameterInfoHandler<Abstract.Reference, List<Abst
                 data as? Abstract.Reference
 
             override fun visitReference(data: Any?, referent: Referable, level1: Abstract.LevelExpression?, level2: Abstract.LevelExpression?, errorData: Abstract.ErrorData?, params: Void?): Abstract.Reference? =
+                data as? Abstract.Reference
+
+            override fun visitReference(data: Any?, referent: Referable, isLowerBound1: Boolean, bound1: BigInteger?, isLowerBound2: Boolean, bound2: BigInteger?, errorData: Abstract.ErrorData?, params: Void?): Abstract.Reference? =
                 data as? Abstract.Reference
         }, null)
     }

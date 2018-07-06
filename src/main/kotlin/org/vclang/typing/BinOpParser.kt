@@ -14,18 +14,19 @@ import org.vclang.psi.VcExpr
 
 private fun addExpression(expr: Abstract.Expression?, binOpSeq: MutableList<Concrete.BinOpSequenceElem>, fixity: Fixity, isExplicit: Boolean) {
     val ref = expr?.accept(object : BaseAbstractExpressionVisitor<Void, Concrete.Expression?>(null) {
-        private fun getResult(data: Any?, referent: Referable): Concrete.Expression? =
+        private fun getResult(data: Any?, refExpr: Concrete.ReferenceExpression): Concrete.Expression? =
             if (expr is VcExpr) {
-                val refExpr = Concrete.ReferenceExpression(data, referent, Concrete.PLevelExpression(data), Concrete.HLevelExpression(data))
                 val arg = ExpressionResolveNameVisitor.resolve(refExpr, expr.scope)
                 if (arg == null) refExpr else Concrete.AppExpression.make(data, refExpr, arg, false)
             } else {
                 null
             }
 
-        override fun visitReference(data: Any?, referent: Referable, lp: Int, lh: Int, errorData: Abstract.ErrorData?, params: Void?) = getResult(data, referent)
+        override fun visitReference(data: Any?, referent: Referable, lp: Int, lh: Int, errorData: Abstract.ErrorData?, params: Void?) =
+            getResult(data, Concrete.LevelReferenceExpression.make(data, referent, Concrete.NumberLevelExpression(data, lp), Concrete.NumberLevelExpression(data, lh)))
 
-        override fun visitReference(data: Any?, referent: Referable, level1: Abstract.LevelExpression?, level2: Abstract.LevelExpression?, errorData: Abstract.ErrorData?, params: Void?) = getResult(data, referent)
+        override fun visitReference(data: Any?, referent: Referable, level1: Abstract.LevelExpression?, level2: Abstract.LevelExpression?, errorData: Abstract.ErrorData?, params: Void?) =
+            getResult(data, Concrete.ReferenceExpression(data, referent))
     }, null)
 
     val referable = when (ref) {

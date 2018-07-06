@@ -12,7 +12,9 @@ import com.jetbrains.jetpad.vclang.error.Error
 import com.jetbrains.jetpad.vclang.naming.error.NotInScopeError
 import com.jetbrains.jetpad.vclang.naming.reference.*
 import com.jetbrains.jetpad.vclang.naming.resolving.NameResolvingChecker
+import com.jetbrains.jetpad.vclang.naming.resolving.visitor.ExpressionResolveNameVisitor
 import com.jetbrains.jetpad.vclang.naming.scope.Scope
+import com.jetbrains.jetpad.vclang.prelude.Prelude
 import com.jetbrains.jetpad.vclang.term.NamespaceCommand
 import com.jetbrains.jetpad.vclang.term.group.Group
 import com.jetbrains.jetpad.vclang.typechecking.error.local.LocalError
@@ -145,6 +147,14 @@ class VcHighlightingAnnotator : Annotator {
             val resolved = element.scope.resolveName(defIdentifier.referenceName)
             if (resolved != null && (resolved !is GlobalReferable || PsiLocatedReferable.fromReferable(resolved) !is VcConstructor)) {
                 holder.createErrorAnnotation(defIdentifier, "Expected a constructor")
+            }
+            return
+        }
+
+        if (element is VcLongNameExpr && !element.intSpecList.isEmpty()) {
+            val ref = ExpressionResolveNameVisitor.resolve(element.longName.referent, element.scope, true)
+            if (ref !is ErrorReference && ref != Prelude.INT?.referable && ref != Prelude.NAT?.referable) {
+                holder.createErrorAnnotation(element, "Int bound are allowed only after Int and Nat")
             }
             return
         }

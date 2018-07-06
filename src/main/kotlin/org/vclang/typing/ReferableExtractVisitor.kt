@@ -8,6 +8,7 @@ import com.jetbrains.jetpad.vclang.term.abs.Abstract
 import com.jetbrains.jetpad.vclang.term.abs.BaseAbstractExpressionVisitor
 import com.jetbrains.jetpad.vclang.term.concrete.Concrete
 import org.vclang.psi.VcDefFunction
+import java.math.BigInteger
 
 
 class ReferableExtractVisitor(private val scope: Scope) : BaseAbstractExpressionVisitor<Void?, Referable?>(null) {
@@ -67,9 +68,9 @@ class ReferableExtractVisitor(private val scope: Scope) : BaseAbstractExpression
         return (expr as? Concrete.ReferenceExpression)?.referent
     }
 
-    override fun visitReference(data: Any?, referent: Referable, level1: Abstract.LevelExpression?, level2: Abstract.LevelExpression?, errorData: Abstract.ErrorData?, params: Void?): Referable? = referent
+    override fun visitReference(data: Any?, referent: Referable, level1: Abstract.LevelExpression?, level2: Abstract.LevelExpression?, errorData: Abstract.ErrorData?, params: Void?): Referable = referent
 
-    override fun visitReference(data: Any?, referent: Referable, lp: Int, lh: Int, errorData: Abstract.ErrorData?, params: Void?): Referable? = referent
+    override fun visitReference(data: Any?, referent: Referable, lp: Int, lh: Int, errorData: Abstract.ErrorData?, params: Void?): Referable = referent
 
     override fun visitLam(data: Any?, parameters: Collection<Abstract.Parameter>, body: Abstract.Expression?, errorData: Abstract.ErrorData?, params: Void?): Referable? {
         if (mode != Mode.EXPRESSION || body == null) {

@@ -20,6 +20,10 @@
         LBRACE              = '{'
         RBRACE              = '}'
         LGOAL               = '{?'
+        INT_BRACE_L         = '{<'
+        INT_BRACE_LE        = '{<='
+        INT_BRACE_G         = '{>'
+        INT_BRACE_GE        = '{>='
         LPAREN              = '('
         RPAREN              = ')'
         COLON               = ':'
@@ -528,16 +532,19 @@ atomOnlyLevelExpr ::= LP_KW
 }
 
 argumentAppExpr ::= (longNameExpr | atomFieldsAcc) (argument | argumentRecovery)* {
+    pin = 1
     implements = "org.vclang.psi.VcExpr"
     mixin = "org.vclang.psi.ext.VcArgumentAppExprImplMixin"
     name = "defCall"
 }
 
-longNameExpr ::= longName (levelsExpr | atomOnlyLevelExpr atomOnlyLevelExpr?) {
+longNameExpr ::= longName (intSpec intSpec? | levelsExpr | atomOnlyLevelExpr atomOnlyLevelExpr?) {
     pin = 2
     implements = "org.vclang.psi.VcExpr"
     mixin = "org.vclang.psi.ext.VcLongNameExprImplMixin"
 }
+
+intSpec ::= (INT_BRACE_L | INT_BRACE_LE | INT_BRACE_G | INT_BRACE_GE) NUMBER RBRACE { pin = 1 }
 
 fieldAcc ::= DOT NUMBER { pin = 1 }
 
